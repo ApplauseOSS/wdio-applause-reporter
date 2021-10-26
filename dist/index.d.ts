@@ -1,10 +1,9 @@
 import WDIOReporter, { TestStats } from '@wdio/reporter';
-import { Reporters } from '@wdio/types';
 
 /**
  * Custom Applause reporter configuration
  */
-interface ApplauseOptions {
+interface ApplauseOptions extends Partial<WebdriverIO.ReporterOption> {
     /**
      * The base URL for Applause Automation Service
      */
@@ -26,7 +25,7 @@ declare class ApplauseReporter extends WDIOReporter {
      * overwrite isSynchronised method
      */
     get isSynchronised(): boolean;
-    constructor(optionsIn: Partial<Reporters.Options> & ApplauseOptions);
+    constructor(optionsIn: ApplauseOptions);
     /** This start method CANNOT be async. We need to get the resultId UID mapping promise started before any other hooks run for each test */
     onTestStart(testStats: TestStats): void;
     onTestPass(test: TestStats): Promise<void>;

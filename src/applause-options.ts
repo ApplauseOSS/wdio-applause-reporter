@@ -15,7 +15,4 @@ export interface ApplauseOptions extends Partial<WebdriverIO.ReporterOption> {
    * The product you're testing
    */
   productId: number;
-
-  /** allow anything else*/
-  [key: string]: any;
 }

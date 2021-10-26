@@ -1,7 +1,7 @@
 /**
  * Custom Applause reporter configuration
  */
-export interface ApplauseOptions extends WebdriverIO.ReporterOption {
+export interface ApplauseOptions extends Partial<WebdriverIO.ReporterOption> {
   /**
    * The base URL for Applause Automation Service
    */

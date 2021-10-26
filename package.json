@@ -60,7 +60,7 @@
   },
   "dependencies": {
     "@wdio/reporter": "^7.14.1",
-    "auto-api-client-js": "git+ssh://git@github.com/ApplauseAQI/auto-api-client-js.git#fusion",
+    "auto-api-client-js": "git+ssh://git@github.com/ApplauseOSS/applause-reporter-common#master",
     "axios": "^0.21.4",
     "webdriverio": "^7.14.1"
   }

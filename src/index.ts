@@ -1,6 +1,5 @@
 import WDIOReporter, { TestStats } from '@wdio/reporter';
 // eslint-disable-next-line node/no-extraneous-import
-import type { Reporters } from '@wdio/types';
 import { AutoApi, TestResultStatus } from 'auto-api-client-js';
 import { ApplauseOptions } from './applause-options';
 
@@ -15,7 +14,7 @@ export class ApplauseReporter extends WDIOReporter {
     return this.autoapi.getCallsInFlight === 0;
   }
 
-  constructor(optionsIn: Partial<Reporters.Options> & ApplauseOptions) {
+  constructor(optionsIn: ApplauseOptions) {
     /*
      * make reporter to write to the output stream by default
      */

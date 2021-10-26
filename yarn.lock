@@ -1178,9 +1178,9 @@ atob@^2.1.2:
   resolved "https://registry.yarnpkg.com/atob/-/atob-2.1.2.tgz#6d9517eb9e030d2436666651e86bd9f6f13533c9"
   integrity sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==
 
-"auto-api-client-js@git+ssh://git@github.com/ApplauseAQI/auto-api-client-js.git#fusion":
-  version "0.0.3"
-  resolved "git+ssh://git@github.com/ApplauseAQI/auto-api-client-js.git#461cffdd0b08d9763fedba314e2794778f115617"
+"auto-api-client-js@git+ssh://git@github.com/ApplauseOSS/applause-reporter-common#master":
+  version "0.0.1"
+  resolved "git+ssh://git@github.com/ApplauseOSS/applause-reporter-common#0bae28408960f09a15f9378b066cfc037c38b8d1"
   dependencies:
     "@types/validator" "^13.6.3"
     axios "^0.21.4"

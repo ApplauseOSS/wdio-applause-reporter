@@ -1,4 +1,4 @@
-import WDIOReporter, { TestStats } from '@wdio/reporter';
+import WDIOReporter, { TestStats, RunnerStats } from '@wdio/reporter';
 
 /**
  * Custom Applause reporter configuration
@@ -32,6 +32,7 @@ declare class ApplauseReporter extends WDIOReporter {
     onTestFail(test: TestStats): Promise<void>;
     onTestRetry(test: TestStats): Promise<void>;
     onTestSkip(test: TestStats): Promise<void>;
+    onRunnerEnd(_stats: RunnerStats): Promise<void>;
 }
 
 export { ApplauseOptions, ApplauseReporter };

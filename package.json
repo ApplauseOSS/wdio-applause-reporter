@@ -32,7 +32,11 @@
     "all": "yarn install && yarn lint && yarn build && yarn test && yarn publish-verify"
   },
   "keywords": [
-    "Applause","WDIO","webdriver.io","webdriverio","reporter"
+    "Applause",
+    "WDIO",
+    "webdriver.io",
+    "webdriverio",
+    "reporter"
   ],
   "devDependencies": {
     "@rollup/plugin-node-resolve": "13.0.4",

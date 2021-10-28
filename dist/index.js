@@ -59,6 +59,16 @@ class ApplauseReporter extends WDIOReporter__default['default'] {
         const currentResultId = await this.uidToResultIdMap[test.uid];
         await this.autoapi.submitTestResult(currentResultId, autoApiClientJs.TestResultStatus.SKIPPED);
     }
+    // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+    async onRunnerEnd(_stats) {
+        const valuePromises = Object.values(this.uidToResultIdMap);
+        let resultIds = [];
+        void Promise.all(valuePromises)
+            .then(vals => (resultIds = vals == null ? [] : vals))
+            .catch(() => console.error('Unable to retrieve Applause TestResultIds'));
+        const resp = await this.autoapi.getProviderSessionLinks(resultIds);
+        console.info(resp.data);
+    }
 }
 
 exports.ApplauseReporter = ApplauseReporter;

@@ -2,6 +2,8 @@ import WDIOReporter, { RunnerStats, TestStats } from '@wdio/reporter';
 // eslint-disable-next-line node/no-extraneous-import
 import { AutoApi, TestResultStatus } from 'auto-api-client-js';
 import { ApplauseOptions } from './applause-options';
+import { writeFile } from 'fs';
+import { join as pathJoin } from 'path';
 
 export class ApplauseReporter extends WDIOReporter {
   private readonly autoapi: AutoApi;
@@ -75,7 +77,6 @@ export class ApplauseReporter extends WDIOReporter {
     );
   }
 
-  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
   async onRunnerEnd(_stats: RunnerStats): Promise<void> {
     const valuePromises: Promise<number>[] = Object.values(
       this.uidToResultIdMap
@@ -85,7 +86,17 @@ export class ApplauseReporter extends WDIOReporter {
       .then(vals => (resultIds = vals == null ? [] : vals))
       .catch(() => console.error('Unable to retrieve Applause TestResultIds'));
     const resp = await this.autoapi.getProviderSessionLinks(resultIds);
-    console.info(resp.data);
+    const jsonArray = resp.data || [];
+    if (jsonArray.length > 0) {
+      console.info(JSON.stringify(jsonArray));
+      // this is the wdio.conf outputDir
+      const outputPath = _stats.config.outputDir || '.';
+      // @ts-ignore
+      writeFile(
+        pathJoin(outputPath, 'providerUrls.txt'),
+        JSON.stringify(jsonArray, null, 1)
+      );
+    }
   }
 }
 

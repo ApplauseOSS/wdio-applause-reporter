@@ -4,6 +4,8 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
 var WDIOReporter = require('@wdio/reporter');
 var autoApiClientJs = require('auto-api-client-js');
+var fs = require('fs');
+var path = require('path');
 
 function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
@@ -59,7 +61,6 @@ class ApplauseReporter extends WDIOReporter__default['default'] {
         const currentResultId = await this.uidToResultIdMap[test.uid];
         await this.autoapi.submitTestResult(currentResultId, autoApiClientJs.TestResultStatus.SKIPPED);
     }
-    // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
     async onRunnerEnd(_stats) {
         const valuePromises = Object.values(this.uidToResultIdMap);
         let resultIds = [];
@@ -67,7 +68,14 @@ class ApplauseReporter extends WDIOReporter__default['default'] {
             .then(vals => (resultIds = vals == null ? [] : vals))
             .catch(() => console.error('Unable to retrieve Applause TestResultIds'));
         const resp = await this.autoapi.getProviderSessionLinks(resultIds);
-        console.info(resp.data);
+        const jsonArray = resp.data || [];
+        if (jsonArray.length > 0) {
+            console.info(JSON.stringify(jsonArray));
+            // this is the wdio.conf outputDir
+            const outputPath = _stats.config.outputDir || '.';
+            // @ts-ignore
+            fs.writeFile(path.join(outputPath, 'providerUrls.txt'), JSON.stringify(jsonArray, null, 1));
+        }
     }
 }
 

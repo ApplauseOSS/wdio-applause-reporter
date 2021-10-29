@@ -1,6 +1,6 @@
 import WDIOReporter from '@wdio/reporter';
 import { AutoApi, TestResultStatus } from 'auto-api-client-js';
-import { writeFile } from 'fs';
+import { writeFileSync } from 'fs';
 import { join } from 'path';
 
 class ApplauseReporter extends WDIOReporter {
@@ -65,8 +65,7 @@ class ApplauseReporter extends WDIOReporter {
             console.info(JSON.stringify(jsonArray));
             // this is the wdio.conf outputDir
             const outputPath = _stats.config.outputDir || '.';
-            // @ts-ignore
-            writeFile(join(outputPath, 'providerUrls.txt'), JSON.stringify(jsonArray, null, 1));
+            writeFileSync(join(outputPath, 'providerUrls.txt'), JSON.stringify(jsonArray, null, 1));
         }
     }
 }

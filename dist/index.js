@@ -73,8 +73,7 @@ class ApplauseReporter extends WDIOReporter__default['default'] {
             console.info(JSON.stringify(jsonArray));
             // this is the wdio.conf outputDir
             const outputPath = _stats.config.outputDir || '.';
-            // @ts-ignore
-            fs.writeFile(path.join(outputPath, 'providerUrls.txt'), JSON.stringify(jsonArray, null, 1));
+            fs.writeFileSync(path.join(outputPath, 'providerUrls.txt'), JSON.stringify(jsonArray, null, 1));
         }
     }
 }

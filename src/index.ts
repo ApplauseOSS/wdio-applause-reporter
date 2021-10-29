@@ -2,7 +2,7 @@ import WDIOReporter, { RunnerStats, TestStats } from '@wdio/reporter';
 // eslint-disable-next-line node/no-extraneous-import
 import { AutoApi, TestResultStatus } from 'auto-api-client-js';
 import { ApplauseOptions } from './applause-options';
-import { writeFile } from 'fs';
+import { writeFileSync } from 'fs';
 import { join as pathJoin } from 'path';
 
 export class ApplauseReporter extends WDIOReporter {
@@ -91,8 +91,7 @@ export class ApplauseReporter extends WDIOReporter {
       console.info(JSON.stringify(jsonArray));
       // this is the wdio.conf outputDir
       const outputPath = _stats.config.outputDir || '.';
-      // @ts-ignore
-      writeFile(
+      writeFileSync(
         pathJoin(outputPath, 'providerUrls.txt'),
         JSON.stringify(jsonArray, null, 1)
       );

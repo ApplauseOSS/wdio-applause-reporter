@@ -28,7 +28,7 @@ class ApplauseReporter extends WDIOReporter {
     /** This start method CANNOT be async. We need to get the resultId UID mapping promise started before any other hooks run for each test */
     onTestStart(testStats) {
         this.uidToResultIdMap[testStats.uid] = this.autoapi
-            .startTestCase(testStats.title)
+            .startTestCase(testStats.title, browser.sessionId)
             .then(res => {
             return res.data.testResultId;
         });

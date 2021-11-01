@@ -31,5 +31,6 @@ module.exports = {
       '@typescript-eslint/no-var-requires': 'off',
       '@typescript-eslint/ban-ts-comment': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
+      'node/no-extraneous-import': ['error', {'allowModules': ['webdriver']}],
     },
   };

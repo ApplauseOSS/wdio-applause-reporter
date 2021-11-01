@@ -56,7 +56,7 @@ class ApplauseReporter extends WDIOReporter {
     async onRunnerEnd(_stats) {
         const valuePromises = Object.values(this.uidToResultIdMap);
         let resultIds = [];
-        void Promise.all(valuePromises)
+        await Promise.all(valuePromises)
             .then(vals => (resultIds = vals == null ? [] : vals))
             .catch(() => console.error('Unable to retrieve Applause TestResultIds'));
         const resp = await this.autoapi.getProviderSessionLinks(resultIds);

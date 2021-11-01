@@ -6,7 +6,7 @@ import { ApplauseOptions } from './applause-options';
 import { writeFileSync } from 'fs';
 import { join as pathJoin } from 'path';
 
-declare var browser: Client;
+declare let browser: Client;
 
 export class ApplauseReporter extends WDIOReporter {
   private readonly autoapi: AutoApi;
@@ -85,7 +85,7 @@ export class ApplauseReporter extends WDIOReporter {
       this.uidToResultIdMap
     );
     let resultIds: number[] = [];
-    void Promise.all(valuePromises)
+    await Promise.all(valuePromises)
       .then(vals => (resultIds = vals == null ? [] : vals))
       .catch(() => console.error('Unable to retrieve Applause TestResultIds'));
     const resp = await this.autoapi.getProviderSessionLinks(resultIds);

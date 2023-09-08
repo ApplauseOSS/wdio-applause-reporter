@@ -1,4 +1,5 @@
-import WDIOReporter, { RunnerStats, TestStats } from '@wdio/reporter';
+import WDIOReporter, { TestStats, RunnerStats } from '@wdio/reporter';
+import { TestRailOptions } from 'auto-api-client-js';
 
 /**
  * Custom Applause reporter configuration
@@ -16,34 +17,31 @@ interface ApplauseOptions extends Partial<WebdriverIO.ReporterOption> {
      * The product you're testing
      */
     productId: number;
+    /**
+     * TestRail options
+     */
+    testRail: TestRailOptions;
 }
 
 declare class ApplauseReporter extends WDIOReporter {
-    private autoapi?;
-    private readonly contructorPassedOptions;
+    private autoapi;
     private uidToResultIdMap;
+    private resultSubmissionMap;
+    private testRunId;
+    private isEnded;
+    private sdkHeartbeat?;
     /**
      * overwrite isSynchronised method
      */
     get isSynchronised(): boolean;
-    constructor(optionsIn: Partial<ApplauseOptions>);
-    onRunnerStart(runnerStats: RunnerStats): void;
-    static getExplanationForConfigOptionsLoadedFromMultiplePlaces(...options: {
-        options: Record<string | number, string>;
-        source: string;
-    }[]): string | undefined;
-    /**
-     * Courtesy of StackOverflow
-     * @param objects list of strings to get duplicates from
-     * @returns list of strings seen more than once
-     */
-    static getDuplicates(objects: string[]): string[];
+    constructor(options: ApplauseOptions);
+    onRunnerStart(): Promise<void>;
     /** This start method CANNOT be async. We need to get the resultId UID mapping promise started before any other hooks run for each test */
     onTestStart(testStats: TestStats): void;
-    onTestPass(test: TestStats): Promise<void>;
-    onTestFail(test: TestStats): Promise<void>;
-    onTestRetry(test: TestStats): Promise<void>;
-    onTestSkip(test: TestStats): Promise<void>;
+    onTestPass(test: TestStats): void;
+    onTestFail(test: TestStats): void;
+    onTestRetry(test: TestStats): void;
+    onTestSkip(test: TestStats): void;
     onRunnerEnd(_stats: RunnerStats): Promise<void>;
 }
 

@@ -1,3 +1,5 @@
+import { TestRailOptions } from "auto-api-client-js";
+
 /**
  * Custom Applause reporter configuration
  */
@@ -15,4 +17,9 @@ export interface ApplauseOptions extends Partial<WebdriverIO.ReporterOption> {
    * The product you're testing
    */
   productId: number;
+
+  /**
+   * TestRail options
+   */
+  testRail: TestRailOptions;
 }

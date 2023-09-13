@@ -1,146 +1,58 @@
-import WDIOReporter, { RunnerStats, TestStats } from '@wdio/reporter';
-import { Client } from 'webdriver';
-// eslint-disable-next-line node/no-extraneous-import
-import { AutoApi, TestResultStatus, TestRunHeartbeatService } from 'auto-api-client-js';
-import { ApplauseOptions } from './applause-options';
-import { writeFileSync } from 'fs';
-import { join as pathJoin } from 'path';
+import WDIOReporter, { TestStats } from '@wdio/reporter';
+import {
+  ApplauseReporter,
+  ApplauseConfig,
+  TestResultStatus,
+} from 'applause-reporter-common';
+import { Browser } from 'webdriverio';
 
-declare let browser: Client;
+declare let browser: Browser;
 
-export class ApplauseReporter extends WDIOReporter {
-  private autoapi: AutoApi;
-  private uidToResultIdMap: Record<string, Promise<number>>;
-  private resultSubmissionMap: Record<number, Promise<void>>;
-  private testRunId: Promise<number> = Promise.resolve(0);
-  private isEnded: boolean = true;
-  private sdkHeartbeat?: TestRunHeartbeatService;
+export class ApplauseWdioReporter extends WDIOReporter {
+  private reporter: ApplauseReporter;
 
-  /**
-   * overwrite isSynchronised method
-   */
-  get isSynchronised(): boolean {
-    return this.autoapi === undefined
-      ? false
-      : this.autoapi.getCallsInFlight === 0 && this.isEnded;
-  }
-
-  constructor(options: ApplauseOptions) {
+  constructor(options: ApplauseConfig) {
     super({ stdout: true, ...options });
 
     // Setup the initial maps
-    this.uidToResultIdMap = {};
-    this.resultSubmissionMap = {};
-
-    // Set up the auto-api client
-    this.autoapi = new AutoApi({
-      clientConfig: {
-        baseUrl: options.baseUrl,
-        apiKey: options.apiKey,
-      },
-      productId: options.productId,
-      testRailOptions: options.testRail
-    });
+    this.reporter = new ApplauseReporter(options);
   }
 
-  async onRunnerStart(): Promise<void> {
-    this.testRunId = this.autoapi.startTestRun({tests: []}).then(res => res.data.runId);
-    let runId = await this.testRunId;
-    this.isEnded = false;
-    this.sdkHeartbeat = new TestRunHeartbeatService(runId, this.autoapi);
-    await this.sdkHeartbeat.start();
+  onRunnerStart() {
+    this.reporter.runnerStart();
   }
 
-  /** This start method CANNOT be async. We need to get the resultId UID mapping promise started before any other hooks run for each test */
   onTestStart(testStats: TestStats): void {
-    this.uidToResultIdMap[testStats.uid] = this.testRunId.then(runId => {
-      return this.autoapi!.startTestCase(
-        {
-          providerSessionIds: [browser.sessionId],
-          testCaseName: testStats.title,
-          testRunId: runId
-        }
-      )
-    }).then(res => {
-      return res.data.testResultId;
+    this.reporter.startTestCase(testStats.uid, testStats.fullTitle, {
+      providerSessionIds: [browser.sessionId],
     });
   }
 
   onTestPass(test: TestStats): void {
-    this.uidToResultIdMap[test.uid].then(currentResultId => {
-      this.resultSubmissionMap[currentResultId] = this.autoapi!.submitTestResult(
-        {
-          testResultId: currentResultId,
-          status: TestResultStatus.PASSED
-        }
-      );
-    });
+    this.reporter.submitTestCaseResult(test.uid, TestResultStatus.PASSED);
   }
 
   onTestFail(test: TestStats): void {
-    this.uidToResultIdMap[test.uid].then(currentResultId => {
-      this.resultSubmissionMap[currentResultId] = this.autoapi!.submitTestResult(
-        {
-          testResultId: currentResultId,
-          status: TestResultStatus.FAILED
-        }
-      );
+    this.reporter.submitTestCaseResult(test.uid, TestResultStatus.FAILED, {
+      failureReason: test.error?.message,
     });
   }
 
   onTestRetry(test: TestStats): void {
-    this.uidToResultIdMap[test.uid].then(currentResultId => {
-      this.resultSubmissionMap[currentResultId] = this.autoapi!.submitTestResult(
-        {
-          testResultId: currentResultId,
-          status: TestResultStatus.SKIPPED
-        }
-      );
+    this.reporter.submitTestCaseResult(test.uid, TestResultStatus.SKIPPED, {
+      failureReason: test.error?.message,
     });
   }
 
   onTestSkip(test: TestStats): void {
-    this.uidToResultIdMap[test.uid].then(currentResultId => {
-      this.resultSubmissionMap[currentResultId] = this.autoapi!.submitTestResult(
-        {
-          testResultId: currentResultId,
-          status: TestResultStatus.SKIPPED
-        }
-      );
+    this.reporter.submitTestCaseResult(test.uid, TestResultStatus.SKIPPED, {
+      failureReason: test.error?.message,
     });
   }
 
-  async onRunnerEnd(_stats: RunnerStats): Promise<void> {
-    // Verify that the testRun has been created
-    let runId = await this.testRunId;
-
-    // Wait for all results to be created
-    let resultIds = await Promise.all(Object.values(this.uidToResultIdMap));
-
-    // Then wait for all results to be submitted
-    await Promise.all(Object.values(this.resultSubmissionMap));
-
-    // Shut down the heartbeat service
-    await this.sdkHeartbeat?.end();
-  
-    // End the test run
-    await this.autoapi.endTestRun(runId);
-
-    // Finally get the provider session links and output them to a file
-    const resp = await this.autoapi!.getProviderSessionLinks(resultIds);
-    const jsonArray = resp.data || [];
-    if (jsonArray.length > 0) {
-      console.info(JSON.stringify(jsonArray));
-      // this is the wdio.conf outputDir
-      const outputPath = _stats.config.outputDir || '.';
-      writeFileSync(
-        pathJoin(outputPath, 'providerUrls.txt'),
-        JSON.stringify(jsonArray, null, 1)
-      );
-    }
-    this.isEnded = true;
+  async onRunnerEnd(): Promise<void> {
+    await this.reporter.runnerEnd();
   }
 }
 
-// re-export this so its public to our module users
-export { ApplauseOptions } from './applause-options';
+export { ApplauseConfig };

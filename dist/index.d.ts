@@ -1,48 +1,17 @@
-import WDIOReporter, { TestStats, RunnerStats } from '@wdio/reporter';
-import { TestRailOptions } from 'auto-api-client-js';
+import WDIOReporter, { TestStats } from '@wdio/reporter';
+import { ApplauseConfig } from 'applause-reporter-common';
+export { ApplauseConfig } from 'applause-reporter-common';
 
-/**
- * Custom Applause reporter configuration
- */
-interface ApplauseOptions extends Partial<WebdriverIO.ReporterOption> {
-    /**
-     * The base URL for Applause Automation Service
-     */
-    baseUrl: string;
-    /**
-     * Your API Key
-     */
-    apiKey: string;
-    /**
-     * The product you're testing
-     */
-    productId: number;
-    /**
-     * TestRail options
-     */
-    testRail: TestRailOptions;
-}
-
-declare class ApplauseReporter extends WDIOReporter {
-    private autoapi;
-    private uidToResultIdMap;
-    private resultSubmissionMap;
-    private testRunId;
-    private isEnded;
-    private sdkHeartbeat?;
-    /**
-     * overwrite isSynchronised method
-     */
-    get isSynchronised(): boolean;
-    constructor(options: ApplauseOptions);
-    onRunnerStart(): Promise<void>;
-    /** This start method CANNOT be async. We need to get the resultId UID mapping promise started before any other hooks run for each test */
+declare class ApplauseWdioReporter extends WDIOReporter {
+    private reporter;
+    constructor(options: ApplauseConfig);
+    onRunnerStart(): void;
     onTestStart(testStats: TestStats): void;
     onTestPass(test: TestStats): void;
     onTestFail(test: TestStats): void;
     onTestRetry(test: TestStats): void;
     onTestSkip(test: TestStats): void;
-    onRunnerEnd(_stats: RunnerStats): Promise<void>;
+    onRunnerEnd(): Promise<void>;
 }
 
-export { ApplauseOptions, ApplauseReporter };
+export { ApplauseWdioReporter };

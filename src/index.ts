@@ -3,6 +3,7 @@ import {
   ApplauseReporter,
   ApplauseConfig,
   TestResultStatus,
+  loadConfig,
 } from 'applause-reporter-common';
 import { Browser } from 'webdriverio';
 
@@ -11,11 +12,13 @@ declare let browser: Browser;
 export class ApplauseWdioReporter extends WDIOReporter {
   private reporter: ApplauseReporter;
 
-  constructor(options: ApplauseConfig) {
+  constructor(options: Partial<ApplauseConfig>) {
     super({ stdout: true, ...options });
-
+    const config = loadConfig({
+      properties: options,
+    });
     // Setup the initial maps
-    this.reporter = new ApplauseReporter(options);
+    this.reporter = new ApplauseReporter(config);
   }
 
   onRunnerStart() {

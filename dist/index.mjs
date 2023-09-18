@@ -1,12 +1,15 @@
 import WDIOReporter from '@wdio/reporter';
-import { ApplauseReporter, TestResultStatus } from 'applause-reporter-common';
+import { loadConfig, ApplauseReporter, TestResultStatus } from 'applause-reporter-common';
 
 class ApplauseWdioReporter extends WDIOReporter {
     reporter;
     constructor(options) {
         super({ stdout: true, ...options });
+        const config = loadConfig({
+            properties: options,
+        });
         // Setup the initial maps
-        this.reporter = new ApplauseReporter(options);
+        this.reporter = new ApplauseReporter(config);
     }
     onRunnerStart() {
         this.reporter.runnerStart();

@@ -7,8 +7,11 @@ class ApplauseWdioReporter extends WDIOReporter {
     reporter;
     constructor(options) {
         super({ stdout: true, ...options });
+        const config = applauseReporterCommon.loadConfig({
+            properties: options,
+        });
         // Setup the initial maps
-        this.reporter = new applauseReporterCommon.ApplauseReporter(options);
+        this.reporter = new applauseReporterCommon.ApplauseReporter(config);
     }
     onRunnerStart() {
         this.reporter.runnerStart();

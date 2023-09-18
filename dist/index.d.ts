@@ -4,7 +4,7 @@ export { ApplauseConfig } from 'applause-reporter-common';
 
 declare class ApplauseWdioReporter extends WDIOReporter {
     private reporter;
-    constructor(options: ApplauseConfig);
+    constructor(options: Partial<ApplauseConfig>);
     onRunnerStart(): void;
     onTestStart(testStats: TestStats): void;
     onTestPass(test: TestStats): void;

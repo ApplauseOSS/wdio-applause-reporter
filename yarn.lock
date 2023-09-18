@@ -1069,14 +1069,14 @@
     "@typescript-eslint/types" "6.7.0"
     eslint-visitor-keys "^3.4.1"
 
-"@wdio/config@8.16.10":
-  version "8.16.10"
-  resolved "https://registry.yarnpkg.com/@wdio/config/-/config-8.16.10.tgz#4b7238b5477655a441e7812b3669bcb86f85ef0c"
-  integrity sha512-KVV+pdwp0SqAWMwLF4F1cbN996B4xZkdLY8uw2sZAr1/UwOHI2yhWUA1yvGQ7U5+zgnFpYEU995eaNhgIwaWsA==
+"@wdio/config@8.16.11":
+  version "8.16.11"
+  resolved "https://registry.yarnpkg.com/@wdio/config/-/config-8.16.11.tgz#64f8f5f0ec2f8ca94f9a272be8acddcbfde87290"
+  integrity sha512-AU4aLRlpzI7qWzpx2sJa+KW/PeWEkVwlDYfaTyq5d/97aEdKGR+xJ+uOyuJGsGKw5asAX2zsXMT5BrtSL+IqaA==
   dependencies:
     "@wdio/logger" "8.11.0"
     "@wdio/types" "8.16.7"
-    "@wdio/utils" "8.16.10"
+    "@wdio/utils" "8.16.11"
     decamelize "^6.0.0"
     deepmerge-ts "^5.0.0"
     glob "^10.2.2"
@@ -1123,10 +1123,10 @@
   dependencies:
     "@types/node" "^20.1.0"
 
-"@wdio/utils@8.16.10":
-  version "8.16.10"
-  resolved "https://registry.yarnpkg.com/@wdio/utils/-/utils-8.16.10.tgz#a270f1bfd0de5cd0424d64f5ed7fb3bffaf71f44"
-  integrity sha512-Y62gU3U0MO3HjPSUwfHEodcjuhhTrBT11QGlSbMOu8yhd1zv9vt293iaxgx/PA/Dcha8ITK1e5GI1EzFDixw3w==
+"@wdio/utils@8.16.11":
+  version "8.16.11"
+  resolved "https://registry.yarnpkg.com/@wdio/utils/-/utils-8.16.11.tgz#02be50d1ed4b8aea14c966fd0305e179c4cef4f5"
+  integrity sha512-hV0p7sK2f6KuaFXYFZLFaRs4o/l2nxvB5z3c4umQ2P71/mms1k8h1A9hK+aMCHg2plPcKr74lzxsGhIT+pD1Zg==
   dependencies:
     "@puppeteer/browsers" "^1.6.0"
     "@wdio/logger" "8.11.0"
@@ -1226,7 +1226,7 @@ anymatch@^3.0.3:
 
 "applause-reporter-common@https://github.com/ApplauseOSS/applause-reporter-common#master":
   version "0.0.1"
-  resolved "https://github.com/ApplauseOSS/applause-reporter-common#c036d0854f460dea6d905acfbfd0e97bbec8570a"
+  resolved "https://github.com/ApplauseOSS/applause-reporter-common#521012478bbbe6c98ed58e6d1acb1f91229f93c1"
   dependencies:
     axios "^1.5.0"
     validator "^13.11.0"
@@ -4733,35 +4733,35 @@ web-streams-polyfill@^3.0.3:
   resolved "https://registry.yarnpkg.com/web-streams-polyfill/-/web-streams-polyfill-3.2.1.tgz#71c2718c52b45fd49dbeee88634b3a60ceab42a6"
   integrity sha512-e0MO3wdXWKrLbL0DgGnUV7WHVuw9OUvL4hjgnPkIeEvESk74gAITi5G606JtZPp39cd8HA9VQzCIvA49LpPN5Q==
 
-webdriver@8.16.10:
-  version "8.16.10"
-  resolved "https://registry.yarnpkg.com/webdriver/-/webdriver-8.16.10.tgz#63d99a21b3a924ce17b05414c120078c48489909"
-  integrity sha512-X/8W8uGp/oEMy7crSm9dxqzznBiZMl6cWvUDbi1i3G5CB1eCq3si4mybE5NannZE8/CPfrYaLYpL9Z0IGKp6Fw==
+webdriver@8.16.11:
+  version "8.16.11"
+  resolved "https://registry.yarnpkg.com/webdriver/-/webdriver-8.16.11.tgz#296fc65c9aa3aafe215bb564f02fd01107a09a31"
+  integrity sha512-pDSOUsq6DOHCUNOw9WUjw1XKZcEqRaKeEXy6V/S2/qPv6HtJBAsZAVgJzKjH+4dVeLmmSphcIEUfIegcFwX7cQ==
   dependencies:
     "@types/node" "^20.1.0"
     "@types/ws" "^8.5.3"
-    "@wdio/config" "8.16.10"
+    "@wdio/config" "8.16.11"
     "@wdio/logger" "8.11.0"
     "@wdio/protocols" "8.16.5"
     "@wdio/types" "8.16.7"
-    "@wdio/utils" "8.16.10"
+    "@wdio/utils" "8.16.11"
     deepmerge-ts "^5.1.0"
     got "^ 12.6.1"
     ky "^0.33.0"
     ws "^8.8.0"
 
 webdriverio@^8.16.6:
-  version "8.16.10"
-  resolved "https://registry.yarnpkg.com/webdriverio/-/webdriverio-8.16.10.tgz#0115cf1f28408e6c3e51c337f624ab9d147bde65"
-  integrity sha512-V/Y63yHh9vlmtpJnvoY7iy5BlmTc98ECz7U/mufPn74qD0jTBYf7L3Wau0E43u+PBRACLDNL451cxKsi5fejHw==
+  version "8.16.11"
+  resolved "https://registry.yarnpkg.com/webdriverio/-/webdriverio-8.16.11.tgz#406247d97744633f1530da24f310f2688096bf31"
+  integrity sha512-r9vefYj1ULR2aU8u3fi5neX2m7zjN+wwh/WgdtRFIolpBBUhyaXZIxiZeD6oGnq7H1mafvyC6p+vPjX129A6mg==
   dependencies:
     "@types/node" "^20.1.0"
-    "@wdio/config" "8.16.10"
+    "@wdio/config" "8.16.11"
     "@wdio/logger" "8.11.0"
     "@wdio/protocols" "8.16.5"
     "@wdio/repl" "8.10.1"
     "@wdio/types" "8.16.7"
-    "@wdio/utils" "8.16.10"
+    "@wdio/utils" "8.16.11"
     archiver "^6.0.0"
     aria-query "^5.0.0"
     css-shorthand-properties "^1.1.1"
@@ -4778,7 +4778,7 @@ webdriverio@^8.16.6:
     resq "^1.9.1"
     rgb2hex "0.2.5"
     serialize-error "^11.0.1"
-    webdriver "8.16.10"
+    webdriver "8.16.11"
 
 webidl-conversions@^3.0.0:
   version "3.0.1"

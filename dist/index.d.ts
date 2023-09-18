@@ -12,6 +12,7 @@ declare class ApplauseWdioReporter extends WDIOReporter {
     onTestRetry(test: TestStats): void;
     onTestSkip(test: TestStats): void;
     onRunnerEnd(): Promise<void>;
+    get isSynchronised(): boolean;
 }
 
 export { ApplauseWdioReporter };

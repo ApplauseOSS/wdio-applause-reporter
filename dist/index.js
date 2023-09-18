@@ -42,6 +42,9 @@ class ApplauseWdioReporter extends WDIOReporter {
     async onRunnerEnd() {
         await this.reporter.runnerEnd();
     }
+    get isSynchronised() {
+        return this.reporter.isSynchronized();
+    }
 }
 
 exports.ApplauseWdioReporter = ApplauseWdioReporter;

@@ -48,4 +48,4 @@ class ApplauseWdioReporter extends WDIOReporter {
 }
 
 exports.ApplauseWdioReporter = ApplauseWdioReporter;
-//# sourceMappingURL=index.js.map
+//# sourceMappingURL=index.cjs.map

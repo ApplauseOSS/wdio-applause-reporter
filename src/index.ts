@@ -32,24 +32,29 @@ export class ApplauseWdioReporter extends WDIOReporter {
   }
 
   onTestPass(test: TestStats): void {
-    this.reporter.submitTestCaseResult(test.uid, TestResultStatus.PASSED);
+    this.reporter.submitTestCaseResult(test.uid, TestResultStatus.PASSED, {
+      providerSessionGuids: [browser.sessionId],
+    });
   }
 
   onTestFail(test: TestStats): void {
     this.reporter.submitTestCaseResult(test.uid, TestResultStatus.FAILED, {
       failureReason: test.error?.message,
+      providerSessionGuids: [browser.sessionId],
     });
   }
 
   onTestRetry(test: TestStats): void {
     this.reporter.submitTestCaseResult(test.uid, TestResultStatus.SKIPPED, {
       failureReason: test.error?.message,
+      providerSessionGuids: [browser.sessionId],
     });
   }
 
   onTestSkip(test: TestStats): void {
     this.reporter.submitTestCaseResult(test.uid, TestResultStatus.SKIPPED, {
       failureReason: test.error?.message,
+      providerSessionGuids: [browser.sessionId],
     });
   }
 

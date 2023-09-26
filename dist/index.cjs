@@ -22,21 +22,26 @@ class ApplauseWdioReporter extends WDIOReporter {
         });
     }
     onTestPass(test) {
-        this.reporter.submitTestCaseResult(test.uid, applauseReporterCommon.TestResultStatus.PASSED);
+        this.reporter.submitTestCaseResult(test.uid, applauseReporterCommon.TestResultStatus.PASSED, {
+            providerSessionGuids: [browser.sessionId],
+        });
     }
     onTestFail(test) {
         this.reporter.submitTestCaseResult(test.uid, applauseReporterCommon.TestResultStatus.FAILED, {
             failureReason: test.error?.message,
+            providerSessionGuids: [browser.sessionId],
         });
     }
     onTestRetry(test) {
         this.reporter.submitTestCaseResult(test.uid, applauseReporterCommon.TestResultStatus.SKIPPED, {
             failureReason: test.error?.message,
+            providerSessionGuids: [browser.sessionId],
         });
     }
     onTestSkip(test) {
         this.reporter.submitTestCaseResult(test.uid, applauseReporterCommon.TestResultStatus.SKIPPED, {
             failureReason: test.error?.message,
+            providerSessionGuids: [browser.sessionId],
         });
     }
     async onRunnerEnd() {

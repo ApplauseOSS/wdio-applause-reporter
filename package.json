@@ -19,6 +19,11 @@
       "require": "./dist/index.cjs",
       "types": "./dist/index.d.ts"
     },
+    "./hooks": {
+      "import": "./dist/hooks.mjs",
+      "require": "./dist/hooks.cjs",
+      "types": "./dist/hooks.d.ts"
+    },
     "./package.json": "./package.json"
   },
   "engines": {
@@ -50,6 +55,9 @@
     "@types/node": "^20.6.0",
     "@typescript-eslint/eslint-plugin": "^6.7.0",
     "@typescript-eslint/parser": "^6.7.0",
+    "@wdio/globals": "^8.36.0",
+    "@wdio/runner": "^8.36.0",
+    "@wdio/types": "^8.36.0",
     "eslint": "^8.49.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-jest": "^27.2.3",
@@ -66,10 +74,16 @@
     "yarn": "^1.22.19"
   },
   "dependencies": {
+    "@wdio/cli": "^8.36.0",
+    "@wdio/config": "^8.36.0",
+    "@wdio/logger": "^8.28.0",
     "@wdio/reporter": "^8.16.3",
-    "applause-reporter-common": "github:ApplauseOSS/applause-reporter-common#master",
+    "applause-reporter-common": "github:ApplauseOSS/applause-reporter-common#asset-upload",
     "axios": "^1.5.0",
-    "webdriverio": "^8.16.6"
+    "loglevel": "^1.9.1",
+    "webdriverio": "^8.16.6",
+    "winston": "^3.13.0",
+    "winston-transport": "^4.7.0"
   },
   "resolutions": {
     "strip-ansi": "6.0.1",

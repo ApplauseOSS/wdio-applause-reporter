@@ -1,5 +1,5 @@
 import WDIOReporter from '@wdio/reporter';
-import { loadConfig, ApplauseReporter, TestResultStatus, PublicApi, parseTestCaseName, TestRunAutoResultStatus } from 'applause-reporter-common';
+import { loadConfig, ApplauseReporter, TestResultStatus } from 'applause-reporter-common';
 
 class ApplauseWdioReporter extends WDIOReporter {
     reporter;
@@ -49,63 +49,6 @@ class ApplauseWdioReporter extends WDIOReporter {
         return this.reporter.isSynchronized();
     }
 }
-class ApplausePlatformWdioReporter extends WDIOReporter {
-    publciApi;
-    config;
-    inflightCalls = [];
-    constructor(options) {
-        super({ stdout: true, ...options });
-        this.config = loadConfig({
-            properties: options,
-        });
-        // Setup the initial maps
-        this.publciApi = new PublicApi(this.config);
-    }
-    onTestPass(test) {
-        const applauseTestCaseId = parseTestCaseName(test.fullTitle).applauseTestCaseId;
-        if (applauseTestCaseId !== undefined) {
-            const caps = browser.capabilities;
-            this.inflightCalls.push(this.publciApi.submitResult(Number(applauseTestCaseId), {
-                testCycleId: this.config.applauseTestCycleId,
-                status: TestRunAutoResultStatus.PASSED,
-                sessionDetailsJson: {
-                    value: {
-                        deviceName: caps['appium:deviceName'],
-                        orientation: caps['appium:orientation'],
-                        platformName: caps.platformName,
-                        platformVersion: caps['appium:platformVersion'],
-                        browserName: caps.browserName,
-                        browserVersion: caps.browserVersion,
-                    },
-                },
-            }));
-        }
-    }
-    onTestFail(test) {
-        const applauseTestCaseId = parseTestCaseName(test.fullTitle).applauseTestCaseId;
-        if (applauseTestCaseId !== undefined) {
-            this.inflightCalls.push(this.publciApi.submitResult(Number(applauseTestCaseId), {
-                testCycleId: this.config.applauseTestCycleId,
-                status: TestRunAutoResultStatus.PASSED,
-            }));
-        }
-    }
-    onTestSkip(test) {
-        const applauseTestCaseId = parseTestCaseName(test.fullTitle).applauseTestCaseId;
-        if (applauseTestCaseId !== undefined) {
-            this.inflightCalls.push(this.publciApi.submitResult(Number(applauseTestCaseId), {
-                testCycleId: this.config.applauseTestCycleId,
-                status: TestRunAutoResultStatus.PASSED,
-            }));
-        }
-    }
-    async onRunnerEnd() {
-        void (await Promise.all(this.inflightCalls));
-    }
-    get isSynchronised() {
-        return this.publciApi.getCallsInFlight === 0;
-    }
-}
 
-export { ApplausePlatformWdioReporter, ApplauseWdioReporter };
+export { ApplauseWdioReporter };
 //# sourceMappingURL=index.mjs.map

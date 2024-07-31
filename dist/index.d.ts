@@ -14,16 +14,5 @@ declare class ApplauseWdioReporter extends WDIOReporter {
     onRunnerEnd(): Promise<void>;
     get isSynchronised(): boolean;
 }
-declare class ApplausePlatformWdioReporter extends WDIOReporter {
-    private publciApi;
-    private config;
-    private inflightCalls;
-    constructor(options: Partial<ApplauseConfig>);
-    onTestPass(test: TestStats): void;
-    onTestFail(test: TestStats): void;
-    onTestSkip(test: TestStats): void;
-    onRunnerEnd(): Promise<void>;
-    get isSynchronised(): boolean;
-}
 
-export { ApplausePlatformWdioReporter, ApplauseWdioReporter };
+export { ApplauseWdioReporter };

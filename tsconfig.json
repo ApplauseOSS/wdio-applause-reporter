@@ -27,7 +27,8 @@
     "noUnusedParameters": true,
     "emitDeclarationOnly": true,
     "allowImportingTsExtensions": true,
-    "pretty": true
+    "pretty": true,
+    "types": ["node", "@wdio/types", "@wdio/globals/types"],
   },
   "include": [
     "@types/**/*",

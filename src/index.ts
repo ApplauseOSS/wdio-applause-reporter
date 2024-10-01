@@ -260,7 +260,7 @@ export class ApplausePlatformWdioReporter extends WDIOReporter {
     ).applauseTestCaseId;
     if (applauseTestCaseId !== undefined) {
       this.logger.info(`Test ${test.fullTitle}(${applauseTestCaseId}) passed`);
-      const caps = browser.capabilities as WebdriverIO.Capabilities;
+      const caps = browser.capabilities;
       this.inflightCalls.push(
         this.publciApi.submitResult(Number(applauseTestCaseId), {
           testCycleId: this.config.applauseTestCycleId!,
@@ -286,7 +286,7 @@ export class ApplausePlatformWdioReporter extends WDIOReporter {
     ).applauseTestCaseId;
     if (applauseTestCaseId !== undefined) {
       this.logger.info(`Test ${test.fullTitle}(${applauseTestCaseId}) failed`);
-      const caps = browser.capabilities as WebdriverIO.Capabilities;
+      const caps = browser.capabilities;
       this.inflightCalls.push(
         this.publciApi.submitResult(Number(applauseTestCaseId), {
           testCycleId: this.config.applauseTestCycleId!,
@@ -312,7 +312,7 @@ export class ApplausePlatformWdioReporter extends WDIOReporter {
     ).applauseTestCaseId;
     if (applauseTestCaseId !== undefined) {
       this.logger.info(`Test ${test.fullTitle}(${applauseTestCaseId}) skipped`);
-      const caps = browser.capabilities as WebdriverIO.Capabilities;
+      const caps = browser.capabilities;
       this.inflightCalls.push(
         this.publciApi.submitResult(Number(applauseTestCaseId), {
           testCycleId: this.config.applauseTestCycleId!,

@@ -28,7 +28,7 @@ declare class ApplauseResultService implements Services.ServiceInstance {
      * @param world The cucumber world object
      */
     beforeScenario(world: Frameworks.World): Promise<void>;
-    afterCommand(commandName: string, args: any[], result: any): Promise<void>;
+    afterCommand(commandName: string, args: unknown[], result: unknown): Promise<void>;
     /**
      * The afterTest hook is called after each test in a Mocha or Jasmine test.
      *
@@ -36,7 +36,7 @@ declare class ApplauseResultService implements Services.ServiceInstance {
      * @param _context The context object
      * @param result The result object
      */
-    afterTest(test: Frameworks.Test, _context: any, result: Frameworks.TestResult): Promise<void>;
+    afterTest(test: Frameworks.Test, _context: unknown, result: Frameworks.TestResult): Promise<void>;
     /**
      * The afterScenario hook is called after each scenario in a Cucumber test.
      *

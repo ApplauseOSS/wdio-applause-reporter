@@ -18,7 +18,6 @@ export class ApplauseRunService implements Services.ServiceInstance {
   reporter: ApplauseReporter;
   logger: winston.Logger;
 
-  // @ts-ignore
   constructor(serviceOptions: Services.ServiceOption) {
     this.logger =
       (serviceOptions['logger'] as winston.Logger) || constructDefaultLogger();
@@ -28,23 +27,21 @@ export class ApplauseRunService implements Services.ServiceInstance {
     );
   }
 
-  // @ts-ignore
   async onPrepare() {
     const testRunId = await this.reporter.runnerStart();
     process.env['APPLAUSE_RUN_ID'] = `${testRunId}`;
   }
 
-  // @ts-ignore
   async onComplete() {
     await this.reporter.runnerEnd();
   }
 }
+
 export class ApplauseResultService implements Services.ServiceInstance {
   reporter: ApplauseReporter;
   logger: winston.Logger;
   activeTest?: string;
 
-  // @ts-ignore
   constructor(serviceOptions: Services.ServiceOption) {
     this.logger =
       (serviceOptions['logger'] as winston.Logger) || constructDefaultLogger();
@@ -85,8 +82,8 @@ export class ApplauseResultService implements Services.ServiceInstance {
 
   async afterCommand(
     commandName: string,
-    args: any[],
-    result: any
+    args: unknown[],
+    result: unknown
   ): Promise<void> {
     if (!this.activeTest) {
       return;
@@ -114,7 +111,7 @@ export class ApplauseResultService implements Services.ServiceInstance {
    */
   async afterTest(
     test: Frameworks.Test,
-    _context: any,
+    _context: unknown,
     result: Frameworks.TestResult
   ) {
     this.activeTest = undefined;
@@ -240,7 +237,7 @@ export class ApplauseResultService implements Services.ServiceInstance {
 export class ApplausePlatformWdioReporter extends WDIOReporter {
   private publciApi: PublicApi;
   private config: ApplauseConfig;
-  private inflightCalls: Promise<any>[] = [];
+  private inflightCalls: Promise<unknown>[] = [];
   private logger: winston.Logger;
 
   constructor(options: Partial<ApplauseConfig & { logger: winston.Logger }>) {

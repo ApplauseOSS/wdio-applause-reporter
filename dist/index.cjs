@@ -6,18 +6,15 @@ var applauseReporterCommon = require('applause-reporter-common');
 class ApplauseRunService {
     reporter;
     logger;
-    // @ts-ignore
     constructor(serviceOptions) {
         this.logger =
             serviceOptions['logger'] || applauseReporterCommon.constructDefaultLogger();
         this.reporter = new applauseReporterCommon.ApplauseReporter(applauseReporterCommon.loadConfig(serviceOptions), this.logger);
     }
-    // @ts-ignore
     async onPrepare() {
         const testRunId = await this.reporter.runnerStart();
         process.env['APPLAUSE_RUN_ID'] = `${testRunId}`;
     }
-    // @ts-ignore
     async onComplete() {
         await this.reporter.runnerEnd();
     }
@@ -26,7 +23,6 @@ class ApplauseResultService {
     reporter;
     logger;
     activeTest;
-    // @ts-ignore
     constructor(serviceOptions) {
         this.logger =
             serviceOptions['logger'] || applauseReporterCommon.constructDefaultLogger();

@@ -4,18 +4,15 @@ import { constructDefaultLogger, ApplauseReporter, loadConfig, AssetType, TestRe
 class ApplauseRunService {
     reporter;
     logger;
-    // @ts-ignore
     constructor(serviceOptions) {
         this.logger =
             serviceOptions['logger'] || constructDefaultLogger();
         this.reporter = new ApplauseReporter(loadConfig(serviceOptions), this.logger);
     }
-    // @ts-ignore
     async onPrepare() {
         const testRunId = await this.reporter.runnerStart();
         process.env['APPLAUSE_RUN_ID'] = `${testRunId}`;
     }
-    // @ts-ignore
     async onComplete() {
         await this.reporter.runnerEnd();
     }
@@ -24,7 +21,6 @@ class ApplauseResultService {
     reporter;
     logger;
     activeTest;
-    // @ts-ignore
     constructor(serviceOptions) {
         this.logger =
             serviceOptions['logger'] || constructDefaultLogger();

@@ -82,8 +82,9 @@ class ApplauseResultService {
             this.logger.error('Test Failed: ' + title);
         }
         await this.captureAssets(title, result.passed);
+        const errorMessage = result.error?.message || result.exception;
         await this.reporter.submitTestCaseResult(title, result.passed ? applauseReporterCommon.TestResultStatus.PASSED : applauseReporterCommon.TestResultStatus.FAILED, {
-            failureReason: result.exception,
+            failureReason: errorMessage,
         });
     }
     /**
@@ -102,8 +103,9 @@ class ApplauseResultService {
             this.logger.error('Test Failed: ' + title);
         }
         await this.captureAssets(title, result.passed);
+        const errorMessage = result.error?.message || result.exception;
         await this.reporter.submitTestCaseResult(title, result.passed ? applauseReporterCommon.TestResultStatus.PASSED : applauseReporterCommon.TestResultStatus.FAILED, {
-            failureReason: result.exception,
+            failureReason: errorMessage,
         });
     }
     /**

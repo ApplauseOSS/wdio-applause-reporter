@@ -62,7 +62,7 @@ export class ApplauseResultService implements Services.ServiceInstance {
     this.logger.info('Starting test: ' + title);
     this.activeTest = title;
     await this.reporter.startTestCase(title, title, {
-      providerSessionIds: [browser.sessionId],
+      providerSessionIds: [],
     });
   }
 
@@ -76,7 +76,7 @@ export class ApplauseResultService implements Services.ServiceInstance {
     this.logger.info('Starting Scenario: ' + title);
     this.activeTest = title;
     await this.reporter.startTestCase(title, title, {
-      providerSessionIds: [browser.sessionId],
+      providerSessionIds: [],
     });
   }
 
@@ -117,12 +117,11 @@ export class ApplauseResultService implements Services.ServiceInstance {
     this.activeTest = undefined;
     const title = this.lookupTitle(test);
     if (result.passed) {
-      this.logger.info('Test Passed: ' + title);
+      this.logger.info('Test Passed: ' + title + ' (' + browser.sessionId + ')');
     } else {
       this.logger.error('Test Failed: ' + title);
     }
-    await this.captureAssets(title, result.passed);
-    const errorMessage: string = result.error?.message || result.exception;
+    const errorMessage: string  = result.error?.message || result.exception;
     let status = TestResultStatus.FAILED;
 
     if (result.passed) {
@@ -130,10 +129,15 @@ export class ApplauseResultService implements Services.ServiceInstance {
     } else if (errorMessage.includes('skip')) {
       status = TestResultStatus.SKIPPED;
     }
-
-    await this.reporter.submitTestCaseResult(title, status, {
-      failureReason: errorMessage,
-    });
+    await this.reporter.submitTestCaseResult(
+      title,
+      status,
+      {
+        failureReason: errorMessage,
+        providerSessionGuids: [browser.sessionId],
+      }
+    );
+    await this.captureAssets(title, result.passed);
   }
 
   /**
@@ -150,15 +154,16 @@ export class ApplauseResultService implements Services.ServiceInstance {
     } else {
       this.logger.error('Test Failed: ' + title);
     }
-    await this.captureAssets(title, result.passed);
-    const errorMessage: string = result.error?.message || result.exception;
+    const errorMessage: string  = result.error?.message || result.exception;
     await this.reporter.submitTestCaseResult(
       title,
       result.passed ? TestResultStatus.PASSED : TestResultStatus.FAILED,
       {
         failureReason: errorMessage,
+        providerSessionGuids: [browser.sessionId],
       }
     );
+    await this.captureAssets(title, result.passed);
   }
 
   /**

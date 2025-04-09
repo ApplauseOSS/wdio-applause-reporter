@@ -73,20 +73,19 @@ class ApplauseResultService {
     async afterTest(test, _context, result) {
         this.activeTest = undefined;
         const title = this.lookupTitle(test);
-        if (result.passed) {
-            this.logger.info('Test Passed: ' + title);
-        }
-        else {
-            this.logger.error('Test Failed: ' + title);
-        }
         await this.captureAssets(title, result.passed);
         const errorMessage = result.error?.message || result.exception;
         let status = TestResultStatus.FAILED;
         if (result.passed) {
             status = TestResultStatus.PASSED;
+            this.logger.info('Test Passed: ' + title);
         }
         else if (errorMessage.includes('skip')) {
             status = TestResultStatus.SKIPPED;
+            this.logger.error('Test Skipped: ' + title);
+        }
+        else {
+            this.logger.error('Test Failed: ' + title);
         }
         await this.reporter.submitTestCaseResult(title, status, {
             failureReason: errorMessage,

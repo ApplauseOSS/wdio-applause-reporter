@@ -1,15 +1,15 @@
 import WDIOReporter, { TestStats } from '@wdio/reporter';
-import { Services, Frameworks } from '@wdio/types';
+import { Frameworks, Services } from '@wdio/types';
 import {
   APPLAUSE_LOG_RECORDS,
+  ApplauseConfig,
   ApplauseReporter,
   AssetType,
-  loadConfig,
-  TestResultStatus,
   constructDefaultLogger,
-  PublicApi,
-  ApplauseConfig,
+  loadConfig,
   parseTestCaseName,
+  PublicApi,
+  TestResultStatus,
   TestRunAutoResultStatus,
 } from 'applause-reporter-common';
 import * as winston from 'winston';
@@ -122,14 +122,18 @@ export class ApplauseResultService implements Services.ServiceInstance {
       this.logger.error('Test Failed: ' + title);
     }
     await this.captureAssets(title, result.passed);
-    const errorMessage: string  = result.error?.message || result.exception;
-    await this.reporter.submitTestCaseResult(
-      title,
-      result.passed ? TestResultStatus.PASSED : TestResultStatus.FAILED,
-      {
-        failureReason: errorMessage,
-      }
-    );
+    const errorMessage: string = result.error?.message || result.exception;
+    let status = TestResultStatus.FAILED;
+
+    if (result.passed) {
+      status = TestResultStatus.PASSED;
+    } else if (errorMessage.includes('skip')) {
+      status = TestResultStatus.SKIPPED;
+    }
+
+    await this.reporter.submitTestCaseResult(title, status, {
+      failureReason: errorMessage,
+    });
   }
 
   /**
@@ -147,7 +151,7 @@ export class ApplauseResultService implements Services.ServiceInstance {
       this.logger.error('Test Failed: ' + title);
     }
     await this.captureAssets(title, result.passed);
-    const errorMessage: string  = result.error?.message || result.exception;
+    const errorMessage: string = result.error?.message || result.exception;
     await this.reporter.submitTestCaseResult(
       title,
       result.passed ? TestResultStatus.PASSED : TestResultStatus.FAILED,

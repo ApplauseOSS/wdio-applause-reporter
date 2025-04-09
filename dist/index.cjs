@@ -83,7 +83,14 @@ class ApplauseResultService {
         }
         await this.captureAssets(title, result.passed);
         const errorMessage = result.error?.message || result.exception;
-        await this.reporter.submitTestCaseResult(title, result.passed ? applauseReporterCommon.TestResultStatus.PASSED : applauseReporterCommon.TestResultStatus.FAILED, {
+        let status = applauseReporterCommon.TestResultStatus.FAILED;
+        if (result.passed) {
+            status = applauseReporterCommon.TestResultStatus.PASSED;
+        }
+        else if (errorMessage.includes('skip')) {
+            status = applauseReporterCommon.TestResultStatus.SKIPPED;
+        }
+        await this.reporter.submitTestCaseResult(title, status, {
             failureReason: errorMessage,
         });
     }

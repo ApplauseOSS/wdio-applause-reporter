@@ -37,7 +37,7 @@ class ApplauseResultService {
         this.logger.info('Starting test: ' + title);
         this.activeTest = title;
         await this.reporter.startTestCase(title, title, {
-            providerSessionIds: [browser.sessionId],
+            providerSessionIds: [],
         });
     }
     /**
@@ -50,7 +50,7 @@ class ApplauseResultService {
         this.logger.info('Starting Scenario: ' + title);
         this.activeTest = title;
         await this.reporter.startTestCase(title, title, {
-            providerSessionIds: [browser.sessionId],
+            providerSessionIds: [],
         });
     }
     async afterCommand(commandName, args, result) {
@@ -74,12 +74,11 @@ class ApplauseResultService {
         this.activeTest = undefined;
         const title = this.lookupTitle(test);
         if (result.passed) {
-            this.logger.info('Test Passed: ' + title);
+            this.logger.info('Test Passed: ' + title + ' (' + browser.sessionId + ')');
         }
         else {
             this.logger.error('Test Failed: ' + title);
         }
-        await this.captureAssets(title, result.passed);
         const errorMessage = result.error?.message || result.exception;
         let status = TestResultStatus.FAILED;
         if (result.passed) {
@@ -90,7 +89,9 @@ class ApplauseResultService {
         }
         await this.reporter.submitTestCaseResult(title, status, {
             failureReason: errorMessage,
+            providerSessionGuids: [browser.sessionId],
         });
+        await this.captureAssets(title, result.passed);
     }
     /**
      * The afterScenario hook is called after each scenario in a Cucumber test.
@@ -107,11 +108,12 @@ class ApplauseResultService {
         else {
             this.logger.error('Test Failed: ' + title);
         }
-        await this.captureAssets(title, result.passed);
         const errorMessage = result.error?.message || result.exception;
         await this.reporter.submitTestCaseResult(title, result.passed ? TestResultStatus.PASSED : TestResultStatus.FAILED, {
             failureReason: errorMessage,
+            providerSessionGuids: [browser.sessionId],
         });
+        await this.captureAssets(title, result.passed);
     }
     /**
      * Function to lookup the title from a Test or World object. WebdriverIO is inconsistent with where the title is stored. In some

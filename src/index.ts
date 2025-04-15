@@ -116,24 +116,26 @@ export class ApplauseResultService implements Services.ServiceInstance {
   ) {
     this.activeTest = undefined;
     const title = this.lookupTitle(test);
+    
+    const errorMessage: string | undefined  = result.error?.message || result.exception;
+
+    let status: TestResultStatus;
     if (result.passed) {
       this.logger.info('Test Passed: ' + title + ' (' + browser.sessionId + ')');
+      status = TestResultStatus.PASSED;
+    } else if (test.pending || result.error instanceof ApplauseSkip) {
+      this.logger.warn('Test Skipped: ' + title);
+      status = TestResultStatus.SKIPPED;
     } else {
       this.logger.error('Test Failed: ' + title);
+      status = TestResultStatus.FAILED;
     }
-    const errorMessage: string  = result.error?.message || result.exception;
-    let status = TestResultStatus.FAILED;
 
-    if (result.passed) {
-      status = TestResultStatus.PASSED;
-    } else if (errorMessage.includes('skip')) {
-      status = TestResultStatus.SKIPPED;
-    }
     await this.reporter.submitTestCaseResult(
       title,
       status,
       {
-        failureReason: errorMessage,
+        failureReason: this.cleanErrorMessage(errorMessage),
         providerSessionGuids: [browser.sessionId],
       }
     );
@@ -149,17 +151,24 @@ export class ApplauseResultService implements Services.ServiceInstance {
   async afterScenario(world: Frameworks.World, result: Frameworks.TestResult) {
     this.activeTest = undefined;
     const title = this.lookupTitle(world);
+    const errorMessage: string | undefined  = result.error?.message || result.exception;
+
+    let status: TestResultStatus;
     if (result.passed) {
-      this.logger.info('Test Passed: ' + title);
+      this.logger.info('Test Passed: ' + title + ' (' + browser.sessionId + ')');
+      status = TestResultStatus.PASSED;
+    } else if (result.error instanceof ApplauseSkip) {
+      this.logger.info('Test Skipped: ' + title);
+      status = TestResultStatus.SKIPPED;
     } else {
       this.logger.error('Test Failed: ' + title);
+      status = TestResultStatus.FAILED;
     }
-    const errorMessage: string  = result.error?.message || result.exception;
     await this.reporter.submitTestCaseResult(
       title,
-      result.passed ? TestResultStatus.PASSED : TestResultStatus.FAILED,
+      status,
       {
-        failureReason: errorMessage,
+        failureReason: this.cleanErrorMessage(errorMessage),
         providerSessionGuids: [browser.sessionId],
       }
     );
@@ -243,6 +252,10 @@ export class ApplauseResultService implements Services.ServiceInstance {
       this.logger.error(e);
     }
   }
+
+  cleanErrorMessage(str?: string): string | undefined {
+    return str?.replace(/\\x1B\[[0-9;]*[a-zA-Z]/g, '');
+}
 }
 
 export class ApplausePlatformWdioReporter extends WDIOReporter {
@@ -347,4 +360,17 @@ export class ApplausePlatformWdioReporter extends WDIOReporter {
   get isSynchronised(): boolean {
     return this.publciApi.getCallsInFlight === 0;
   }
+}
+
+export class ApplauseSkip extends Error {
+  readonly message: string;
+
+  constructor(message: string) {
+    super("ApplauseSkip: " + message);
+    this.message = message;
+  }
+}
+
+export function skip(message: string) {
+  throw new ApplauseSkip(message);
 }

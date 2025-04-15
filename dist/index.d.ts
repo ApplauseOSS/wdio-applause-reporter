@@ -61,6 +61,7 @@ declare class ApplauseResultService implements Services.ServiceInstance {
      * @param passed Whether the test case passed
      */
     private captureAssets;
+    cleanErrorMessage(str?: string): string | undefined;
 }
 declare class ApplausePlatformWdioReporter extends WDIOReporter {
     private publciApi;
@@ -76,5 +77,10 @@ declare class ApplausePlatformWdioReporter extends WDIOReporter {
     onRunnerEnd(): Promise<void>;
     get isSynchronised(): boolean;
 }
+declare class ApplauseSkip extends Error {
+    readonly message: string;
+    constructor(message: string);
+}
+declare function skip(message: string): void;
 
-export { ApplausePlatformWdioReporter, ApplauseResultService, ApplauseRunService };
+export { ApplausePlatformWdioReporter, ApplauseResultService, ApplauseRunService, ApplauseSkip, skip };

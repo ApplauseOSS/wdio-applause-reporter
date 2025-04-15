@@ -75,22 +75,22 @@ class ApplauseResultService {
     async afterTest(test, _context, result) {
         this.activeTest = undefined;
         const title = this.lookupTitle(test);
+        const errorMessage = result.error?.message || result.exception;
+        let status;
         if (result.passed) {
             this.logger.info('Test Passed: ' + title + ' (' + browser.sessionId + ')');
+            status = applauseReporterCommon.TestResultStatus.PASSED;
+        }
+        else if (test.pending || result.error instanceof ApplauseSkip) {
+            this.logger.warn('Test Skipped: ' + title);
+            status = applauseReporterCommon.TestResultStatus.SKIPPED;
         }
         else {
             this.logger.error('Test Failed: ' + title);
-        }
-        const errorMessage = result.error?.message || result.exception;
-        let status = applauseReporterCommon.TestResultStatus.FAILED;
-        if (result.passed) {
-            status = applauseReporterCommon.TestResultStatus.PASSED;
-        }
-        else if (errorMessage.includes('skip')) {
-            status = applauseReporterCommon.TestResultStatus.SKIPPED;
+            status = applauseReporterCommon.TestResultStatus.FAILED;
         }
         await this.reporter.submitTestCaseResult(title, status, {
-            failureReason: errorMessage,
+            failureReason: this.cleanErrorMessage(errorMessage),
             providerSessionGuids: [browser.sessionId],
         });
         await this.captureAssets(title, result.passed);
@@ -104,15 +104,22 @@ class ApplauseResultService {
     async afterScenario(world, result) {
         this.activeTest = undefined;
         const title = this.lookupTitle(world);
+        const errorMessage = result.error?.message || result.exception;
+        let status;
         if (result.passed) {
-            this.logger.info('Test Passed: ' + title);
+            this.logger.info('Test Passed: ' + title + ' (' + browser.sessionId + ')');
+            status = applauseReporterCommon.TestResultStatus.PASSED;
+        }
+        else if (result.error instanceof ApplauseSkip) {
+            this.logger.info('Test Skipped: ' + title);
+            status = applauseReporterCommon.TestResultStatus.SKIPPED;
         }
         else {
             this.logger.error('Test Failed: ' + title);
+            status = applauseReporterCommon.TestResultStatus.FAILED;
         }
-        const errorMessage = result.error?.message || result.exception;
-        await this.reporter.submitTestCaseResult(title, result.passed ? applauseReporterCommon.TestResultStatus.PASSED : applauseReporterCommon.TestResultStatus.FAILED, {
-            failureReason: errorMessage,
+        await this.reporter.submitTestCaseResult(title, status, {
+            failureReason: this.cleanErrorMessage(errorMessage),
             providerSessionGuids: [browser.sessionId],
         });
         await this.captureAssets(title, result.passed);
@@ -174,6 +181,9 @@ class ApplauseResultService {
             this.logger.error('Error capturing assets');
             this.logger.error(e);
         }
+    }
+    cleanErrorMessage(str) {
+        return str?.replace(/\\x1B\[[0-9;]*[a-zA-Z]/g, '');
     }
 }
 class ApplausePlatformWdioReporter extends WDIOReporter {
@@ -261,8 +271,20 @@ class ApplausePlatformWdioReporter extends WDIOReporter {
         return this.publciApi.getCallsInFlight === 0;
     }
 }
+class ApplauseSkip extends Error {
+    message;
+    constructor(message) {
+        super("ApplauseSkip: " + message);
+        this.message = message;
+    }
+}
+function skip(message) {
+    throw new ApplauseSkip(message);
+}
 
 exports.ApplausePlatformWdioReporter = ApplausePlatformWdioReporter;
 exports.ApplauseResultService = ApplauseResultService;
 exports.ApplauseRunService = ApplauseRunService;
+exports.ApplauseSkip = ApplauseSkip;
+exports.skip = skip;
 //# sourceMappingURL=index.cjs.map

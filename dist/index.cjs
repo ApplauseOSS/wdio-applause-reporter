@@ -2,6 +2,7 @@
 
 var WDIOReporter = require('@wdio/reporter');
 var applauseReporterCommon = require('applause-reporter-common');
+var webdriverio = require('webdriverio');
 
 class ApplauseRunService {
     reporter;
@@ -12,8 +13,13 @@ class ApplauseRunService {
         this.reporter = new applauseReporterCommon.ApplauseReporter(applauseReporterCommon.loadConfig(serviceOptions), this.logger);
     }
     async onPrepare() {
-        const testRunId = await this.reporter.runnerStart();
-        process.env['APPLAUSE_RUN_ID'] = `${testRunId}`;
+        try {
+            const testRunId = await this.reporter.runnerStart();
+            process.env['APPLAUSE_RUN_ID'] = `${testRunId}`;
+        }
+        catch {
+            throw new webdriverio.SevereServiceError("Failed to start Applause reporter, please check logs");
+        }
     }
     async onComplete() {
         await this.reporter.runnerEnd();

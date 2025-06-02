@@ -1,5 +1,6 @@
 import WDIOReporter from '@wdio/reporter';
 import { constructDefaultLogger, ApplauseReporter, loadConfig, AssetType, TestResultStatus, APPLAUSE_LOG_RECORDS, PublicApi, parseTestCaseName, TestRunAutoResultStatus } from 'applause-reporter-common';
+import { SevereServiceError } from 'webdriverio';
 
 class ApplauseRunService {
     reporter;
@@ -10,8 +11,13 @@ class ApplauseRunService {
         this.reporter = new ApplauseReporter(loadConfig(serviceOptions), this.logger);
     }
     async onPrepare() {
-        const testRunId = await this.reporter.runnerStart();
-        process.env['APPLAUSE_RUN_ID'] = `${testRunId}`;
+        try {
+            const testRunId = await this.reporter.runnerStart();
+            process.env['APPLAUSE_RUN_ID'] = `${testRunId}`;
+        }
+        catch {
+            throw new SevereServiceError("Failed to start Applause reporter, please check logs");
+        }
     }
     async onComplete() {
         await this.reporter.runnerEnd();

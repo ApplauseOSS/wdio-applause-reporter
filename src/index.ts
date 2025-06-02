@@ -12,6 +12,7 @@ import {
   TestResultStatus,
   TestRunAutoResultStatus,
 } from 'applause-reporter-common';
+import { SevereServiceError } from 'webdriverio';
 import * as winston from 'winston';
 
 export class ApplauseRunService implements Services.ServiceInstance {
@@ -28,8 +29,12 @@ export class ApplauseRunService implements Services.ServiceInstance {
   }
 
   async onPrepare() {
-    const testRunId = await this.reporter.runnerStart();
-    process.env['APPLAUSE_RUN_ID'] = `${testRunId}`;
+    try {
+      const testRunId = await this.reporter.runnerStart();
+      process.env['APPLAUSE_RUN_ID'] = `${testRunId}`;
+    } catch {
+      throw new SevereServiceError("Failed to start Applause reporter, please check logs");
+    }
   }
 
   async onComplete() {

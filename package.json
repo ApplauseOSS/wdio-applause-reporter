@@ -67,7 +67,7 @@
     "@wdio/globals": "^9.12.5",
     "@wdio/reporter": "^9.12.3",
     "@wdio/types": "^9.12.3",
-    "applause-reporter-common": "github:ApplauseOSS/applause-reporter-common#master",
+    "applause-reporter-common": "github:ApplauseOSS/applause-reporter-common#v1.1.0",
     "webdriverio": "^9.12.5",
     "winston": "^3.15.0"
   }
